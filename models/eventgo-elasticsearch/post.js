@@ -1,0 +1,445 @@
+/**
+ * This module is used for managing downlink data in database, implemented with
+ * [Elasticsearch]{@link https://github.com/elastic/elasticsearch-js}.
+ *
+ * @module model/elasticsearch/Post
+ */
+
+'use strict';
+var conn = require('./connection');
+
+// Index nane
+var indexName = 'extractedevent';
+
+// Type name.
+var typeName = 'fbpost';
+
+// Index.
+var createIndex = function() {
+  if (!conn.client) {
+    return setTimeout(createIndex, 500);
+  }
+
+  conn.client.indices.create({
+    index: indexName
+  }, function (error, response) {
+    // ...
+    console.log(response);
+    putMapping();
+  });
+  console.log('createIndex();');
+};
+
+var util = require('util');
+
+var putMapping = function() {
+  let indexMapping = {
+    [typeName]: {
+      'properties': {
+        id: { type: 'keyword' },
+        freeTextType: { type: 'keyword' },
+        description: {
+          type: 'text',
+          analyzer: 'ik_smart',
+          search_analyzer: 'ik_smart'
+        },
+        location: {
+          type: 'text',
+          analyzer: 'ik_smart',
+          search_analyzer: 'ik_smart'
+        },
+		    gps: {
+          type: 'geo_point'
+        },
+        name: {
+          type: 'text',
+          analyzer: 'ik_smart',
+          search_analyzer: 'ik_smart'
+        },
+        start_time: { type: 'date' },
+        end_time: { type: 'date' },
+        category : {
+          type: 'text',
+          analyzer: 'ik_smart',
+          search_analyzer: 'ik_smart'
+        },
+        category_list: {
+          type: 'keyword'
+        },
+        owner: {
+          properties: {
+            id: { type: 'keyword' },
+            author: { type: 'keyword' },
+            author_name: { type: 'keyword' }
+          }
+        },
+        created_time: { type: 'date' },
+        venue: {
+          type: 'nested', 
+          properties: {
+            id: { type: 'keyword' },
+            city: { type: 'keyword' },
+            country: { type: 'keyword' },
+            latitude: { type: 'double' },
+            longitude: { type: 'double' },
+            street: {
+              type: 'text',
+              analyzer: 'ik_smart',
+              search_analyzer: 'ik_smart'
+            },
+            zip: { type: 'keyword' }
+          }
+        },
+        recordUpdateTime: { type: 'date' },
+        imgs: { type: 'keyword' },
+        num_mood: { type: 'long' },
+        num_likes: { type: 'long' },
+        num_angry: { type: 'long' },
+        num_ha: { type: 'long' },
+        num_wow: { type: 'long' },
+        num_love: { type: 'long' },
+        num_sad: { type: 'long' },
+        num_comments: { type: 'long' },
+        num_shares: { type: 'long' }
+      }
+    }
+  };
+
+  conn.client.indices.putMapping({
+    index: indexName,
+    type: typeName,
+    body: indexMapping
+  }).catch(function (err) {
+    console.log('err');
+  });
+
+  console.log('conn.client.indices.putMapping');
+}
+// createIndex();
+
+
+/**
+ * To get a list that contains event data.
+ *
+ * @param {Object} [options] Options.
+ *   @param {Object} [options.cond] Conditions.
+ *     @param {string} [options.cond.id] The event data id.
+ *     @param {string} [options.cond.city] The event city.
+ *     @param {number[]} [options.cond.gps] Specified gps.
+ *     @param {string} [options.cond.multiMatch] The multi match parameter.
+ *       @param {string} [options.cond.multiMatch.query] The query string.
+ *       @param {string} [options.cond.multiMatch.fields] The fields to be queried.
+ *     @param {string} [options.cond.timeKey='start_time'] Key of query time.
+ *     @param {number} [options.cond.from] The begin time to query.
+ *     @param {number} [options.cond.to] The end time to query.
+ *   @param {Object} [options.fields] To hide or show fields.
+ *     @param {boolean} [options.fields.owner=false]
+ *   @param {number} [options.skip=0] Number of data to skip.
+ *   @param {number} [options.limit=100] Maximum number of object to return.
+ *   @param {Object} [options.sort] Sort condition.
+ *     @param {string} [options.sort.key='score'] Sort key.
+ *     @param {boolean} [options.sort.asc=false] Use descending order.
+ * @param {function} callback
+ *   @param {falsy|Error} callback.err Elasticsearch error message.
+ *   @param {Array|null} callback.event An array that contains the following
+ *          fields, or <b>null</b> means that no event data were found.
+ *     @param {string} callback.event.id The event id.
+ *     @param {string} callback.event.description The event description.
+ *     @param {string|null} callback.event.location The event location.
+ *     @param {Date|null} callback.event.start_time The event start time.
+ *     @param {Date|null} callback.event.end_time The event end time.
+ *     @param {Object|null} [callback.event.owner] The event owner information.
+ *       @param {String} [callback.event.owner.id] Fans page ID.
+ *       @param {String} [callback.event.owner.author] The event author.
+ *       @param {String} [callback.event.owner.author_name] The post author name.
+ *     @param {Date} callback.event.created_time The time the post was initially published.
+ *     @param {Object|null} callback.event.venue The event venue information.
+ *       @param {string|null} callback.event.venue.id The event venue id.
+ *       @param {string|null} callback.event.venue.city The event venue city.
+ *       @param {number|null} callback.event.venue.latitude The event venue latitude.
+ *       @param {number|null} callback.event.venue.longitude The event venue longitude.
+ *       @param {string|null} callback.event.venue.street The event venue street.
+ *     @param {string[]} callback.event.imgs The event photos links.
+ *     @param {number|null} callback.event.num_mood Total number of mood.
+ *     @param {number|null} callback.event.num_likes Total number of people who liked.
+ *     @param {number|null} callback.event.num_angry Total number of people who angry.
+ *     @param {number|null} callback.event.num_ha Total number of people who ha.
+  *    @param {number|null} callback.event.num_wow Total number of people who wow.
+ *     @param {number|null} callback.event.num_love Total number of people who love.
+ *     @param {number|null} callback.event.num_sad Total number of people who sad.
+ *     @param {number|null} callback.event.num_comments Total number of comments.
+ *     @param {number|null} callback.event.num_shares Total number of people who shares.
+ */
+module.exports.getExtractedEvent = function(options, callback) {
+  if (!conn.client) {
+    
+    return process.nextTick(function() {
+      callback('error');
+    });
+  }
+  
+  if (typeof(options) === 'function') {
+    callback = options;
+  }
+  
+  var cond = {};
+  var mustDSL = [];
+  var rangeBoolean = false;
+  var sourceExcludeFiltering = [];
+  var sort = [];
+  var searchParams = {
+    index: indexName,
+    type: typeName,
+    body: {
+      query: {},
+      sort: {}
+    }
+  }
+
+  if (options && (typeof(options) === 'object')) {
+    if (options.cond && (typeof(options.cond) === 'object')) {
+      var timeKey = 'start_time';
+      var c = options.cond;
+      if (typeof(c.id) === 'string') {
+        mustDSL.push(
+          {
+            term: {
+              id: c.id
+            }
+          }
+        )
+        delete c.timeKey;
+        delete c.from;
+        delete c.to;
+      } else if (Array.isArray(c.id)) {
+        mustDSL.push(
+          {
+            terms: {
+              id: c.id
+            }
+          }
+        )
+        delete c.timeKey;
+        delete c.from;
+        delete c.to;
+      }
+      if (typeof(c.multiMatch) === 'object' && 
+          typeof(c.multiMatch.query) === 'string' &&
+          Array.isArray(c.multiMatch.fields) && c.multiMatch.fields.length) {
+        mustDSL.push(
+          {
+            multi_match: {
+              query: c.multiMatch.query,
+              fields: c.multiMatch.fields
+            }
+          }
+        )
+      }
+      if (typeof(c.city) === 'string') {
+        mustDSL.push(
+          {
+            nested: {
+              path: "venue",
+              query: {
+                term: {
+                  'venue.city': c.city
+                }
+              }
+            }
+          }
+        );
+      } else if (Array.isArray(c.city)) {
+        mustDSL.push(
+          {
+            nested: {
+              path: "venue",
+              query: {
+                terms: {
+                  'venue.city': c.city
+                }
+              }
+            }
+          }
+        );
+      }
+
+      for (var property in cond) {
+        if (cond.hasOwnProperty(property)) {
+          mustDSL.push(
+            {
+              match: {
+                [property]: cond[property]
+              }
+            }
+          );
+        }
+      }
+
+      if (typeof(c.timeKey) === 'string') {
+        timeKey = c.timeKey;
+      }
+      if (typeof(c.from) === 'number') {
+        cond[timeKey] = { gte: new Date(c.from) };
+        rangeBoolean = true;
+      }
+      if (typeof(c.to) === 'number') {
+        if (cond[timeKey]) {
+          cond[timeKey].lte = new Date(c.to);
+        } else {
+          cond[timeKey] = { lte: new Date(c.to) };
+        }
+        rangeBoolean = true;
+      }
+      if (rangeBoolean) {
+        mustDSL.push(
+          {
+            range: {
+              [timeKey]: cond[timeKey]
+            }
+          }
+        )
+      }      
+    }
+    if (options.fields && (typeof(options.fields) === 'object')) {
+      var f = options.fields;
+      
+      if (f.venue === false) {
+        sourceExcludeFiltering.push('venue');
+      }
+      if (f.description === false) {
+        sourceExcludeFiltering.push('description');
+      }
+
+      for (var property in f) {
+        if (f.hasOwnProperty(property) && f[property] === false) {
+          sourceExcludeFiltering.push(property);
+        }
+      }
+    }
+    if ((typeof(options.skip) === 'number') && (options.skip > 0)) {
+      searchParams.from = options.skip;
+    }
+    if ((typeof(options.limit) === 'number') && (options.limit >= 0)) {
+      if (options.limit > 0) {
+        searchParams.size = options.limit;
+      }
+    }
+    if (options.sort && (typeof(options.sort) === 'object')) {
+      var s = options.sort;
+      if (('key' in s) && (typeof(s.key) === 'string')) {
+        if (s.asc === true) {
+          sort.push({ [s.key]: { order: 'asc' } });
+        }
+        if (s.asc === false) {
+          sort.push({ [s.key]: { order: 'desc' } });
+          // console.log('sort[s.key]: ' + util.inspect(sort[s.key], 
+          //   {showHidden: false, depth: null}));
+        }
+      } else if (s.asc === true) {
+        sort = [
+          { start_time: { order: 'asc' } }
+        ];
+      } else if (s.asc === false) {
+        sort = [
+          { start_time: { order: 'desc' } }
+        ];
+      }
+    }
+  }
+  if (Array.isArray(sourceExcludeFiltering) && sourceExcludeFiltering.length) {
+    searchParams._sourceExclude = sourceExcludeFiltering;
+  }
+  if (Array.isArray(mustDSL) && mustDSL.length){
+    // searchParams.body = {
+    //   query: {
+    //     bool:{
+    //       must: mustDSL
+    //     }
+    //   }
+    // }
+    searchParams.body.query = {
+      bool:{
+        must: mustDSL
+      }
+    }
+  }
+  if (Array.isArray(sort) && sort.length){
+    searchParams.body.sort = sort;
+  }
+
+  console.log('searchParams: ' + util.inspect(searchParams, 
+    {showHidden: false, depth: null}));
+  conn.client.search(searchParams, function (err, response) {
+    //console.log(response);
+    if (err) {
+      return callback(err); 
+    }
+    let events;
+    if ('hits' in response && 'hits' in response.hits) {
+      events = response.hits.hits;
+    } else {
+      var err = {
+        message: 'server error'
+      }
+      //err.message = 'server error';
+      return callback(err); 
+    }
+    var result = [];
+    for (var i = 0; i < events.length; i++){
+      result.push(events[i]['_source']);
+    }
+    return callback(err, result);
+  });
+};
+
+var now = new Date();
+var to = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+/*
+var options = {
+  cond: {
+    multiMatch: {
+      query: '中壢火車站',
+      fields: [ 'name^1.6', 'description^0.8', 'location^1.6' ]
+    },
+    timeKey: 'start_time',
+    from: now.getTime(),
+    to: to
+  },
+  fields: {
+    owner: false,
+    description: false
+  }
+}
+*/
+
+var options = {
+  cond: {
+    id: 'FBEvent_210305579520571'
+  },
+  fields: {
+    owner: false
+  }
+}
+/*
+setTimeout(getEvent, 1000, options, function(err, events) {
+  for(var i = 0; i < events.length; i++) {
+    console.log('event: ' + util.inspect(events[i], {showHidden: false, depth: null }));
+  }
+})
+*/
+
+function getCurrentDayTime() {
+  const d = new Date();
+
+  return new Date(
+    Date.UTC(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      0,
+      0,
+      0
+    )
+  )
+}
+console.log(getCurrentDayTime().toISOString());

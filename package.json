@@ -1,0 +1,17 @@
+{
+  "name": "NodeJSExpressProject",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.4",
+    "ejs": "*",
+    "elasticsearch": "^14.1.0",
+    "express": "4.15.4",
+    "gps-distance": "0.0.4"
+  }
+}

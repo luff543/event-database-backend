@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EventDatabaseAPI</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>Event Database APIs</h1>
+<h2>Contents</h2>
+<ul>
+<li>
+<a href="#activity">Activity APIs</a>
+<ul>
+<li><a href="#get_search_activity"><code>GET /activity</code> Search activity</a></li>
+<li><a href="#get_search_activity_histogram"><code>GET /activity/histogram</code> Get activity histogram</a></li>
+<li><a href="#get_search_activity_date_histogram"><code>GET /activity/date-histogram</code> Get activity date histogram</a> </li>
+</ul>
+</li>
+<li>
+<a href="#FB_Event_Post">FB Event Post APIs</a>
+<ul>
+<li><a href="#get_search_event_post"><code>GET /event</code> Search FB Event Post</a></li>
+<li><a href="#get_search_event_post_histogram"><code>GET /event/histogram</code> Get FB Event Post histogram</a></li>
+</ul>
+</li>
+<li>
+<a href="#Extracted_Event_from_FB_Post">Extracted Event from FB Post APIs</a>
+<ul>
+<li><a href="#get_search_extracted_event"><code>GET /extracted_event</code> Search extracted event from FB post</a></li>
+</ul>
+</li>
+</ul>
+<h1>History</h1>
+<ul>
+<li>
+2025 May 11th:
+<ul>
+<li>Add <code>GET /activity/date-histogram</code> API for activity time-based aggregation with support for interval, timezone, and filtering by city, category, type, and keyword.</li>
+</ul>
+</li>
+<li>
+2022 May 14th:
+<ul>
+<li>Event search/statistics API 
+added the description of the type/from/to parameter field.</li>
+</ul>
+</li>
+<li>
+2019 August 14th:
+<ul>
+<li>Add <code>GET /activity</code> and <code>GET /activity/histogram</code> Activity API.</li>
+</ul>
+</li>
+<li>
+2019 July 10th:
+<ul>
+<li>Add <code>GET /event/histogram</code> Event statistics API.</li>
+</ul>
+</li>
+<li>
+2018 May 7th:
+<ul>
+<li>Add <code>GET /extracted_event</code> Search API.</li>
+</ul>
+</li>
+<li>
+2018 Marth 13th:
+<ul>
+<li>Add <code>GET /event</code> Search API.</li>
+</ul>
+</li>
+</ul>
+<h1><a id="activity">Activity APIs</a></h1>
+<h2><a id="get_search_activity"></a> Search activity</h2>
+<p>Search activity.</p>
+<pre><code>GET /activity?
+    query={query}&amp;
+    type={eventType}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    category={category}&amp;
+    gps={gps}&amp;
+    radius={radius}&amp;
+    num={numberOfPage}&amp;
+    p={page}&amp;
+    sort={sort}&amp;
+    asc={asceding}&amp;
+    timeKey={timeField}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>string</em> <code>type</code>: (<strong>optional</strong>) Search specific event types in comma separated format such as <code>type=Web Post,FB Post</code>. You can specify <strong>FB Post</strong>, <strong>Web Post</strong>, <strong>FB Event Post</strong>.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) To display data of the specified categories in comma separated format such as <code>category=音樂,運動</code>. Supports wildcard matching using <code>*</code> symbol for pattern matching (e.g., <code>category=音樂*,運動</code> will match categories starting with &quot;音樂&quot; and exact match &quot;運動&quot;).</li>
+<li><em>string</em> <code>gps</code>: (<strong>optional</strong>) Target point gps. This filter returns all results within a circle of the given radius around the target point.</li>
+<li><em>number</em> <code>radius</code>: (<strong>present when gps parameter exists</strong>) The radius of the search. (meters)</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Number of events to list in each page. Default is <strong>200</strong>.</li>
+<li><em>number</em> <code>p</code>: (<strong>optional</strong>) Page number. <strong>0</strong> to list all events. Positive number to list event by page. Default is <strong>1</strong>.</li>
+<li><em>string</em> <code>sort</code>: (<strong>optional</strong>) To sort with the specified key. You can specify <strong>_score</strong>, <strong>start_time</strong>, <strong>end_time</strong>, <strong>updated_time</strong>, <strong>hot_count</strong>, <strong>distance</strong>, <strong>interested_count</strong>, <strong>num_mood</strong>, <strong>num_likes</strong>, <strong>num_angry</strong>, <strong>num_ha</strong>, <strong>num_wow</strong>, <strong>num_love</strong>, <strong>num_sad</strong>, <strong>num_comments</strong>, <strong>num_shares</strong>. Default is <strong>start_time</strong>.</li>
+<li><em>boolean</em> <code>asc</code>: (<strong>optional</strong>) To sort with ascending order. Default is <strong>true</strong>.</li>
+<li><em>string</em> <code>timeKey</code>: (<strong>optional</strong>) The date field to filter on. Must be one of: <code>start_time</code>, <code>end_time</code>, <code>created_time</code>, <code>updated_time</code>. Default is <code>start_time</code>.</li>
+</ul>
+<h4>Response</h4>
+<ul>
+<li>
+<p><strong>200 OK</strong>: Activity data. Parameters are:</p>
+<ul>
+<li><em>number</em> <code>count</code>: Total number of results matching our search criteria.</li>
+<li><em>number</em> <code>queryTime</code>: Time in seconds for Elasticsearch to execute the search.</li>
+<li>
+<p><em>list</em> <code>events</code>: Activities.</p>
+<ul>
+<li><em>string</em> <code>id</code>: The event ID.</li>
+<li><em>string</em> <code>freetext_type</code>: The event type.</li>
+<li><em>string</em> <code>name</code>: The event name.</li>
+<li><em>string</em> <code>description</code>: (<strong>optional</strong>) The event description.</li>
+<li><em>string</em> <code>highlight_description</code>: (<strong>optional</strong>) The event highlight description.</li>
+<li><em>string</em> <code>location</code>: (<strong>optional</strong>) The event location.</li>
+<li><em>number</em> <code>start_time</code>: The event start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>end_time</code>: (<strong>optional</strong>) The event end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) The event category.</li>
+<li><em>string[]</em> <code>category_list</code>: The event multi-label classification category result.</li>
+<li>
+<em>object</em> <code>owner</code>: (<strong>optional</strong>) The event owner information.
+<ul>
+<li><em>string</em> <code>id</code>: The event owner id.</li>
+<li><em>string</em> <code>name</code>: The event owner name.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) The event owner category.</li>
+</ul>
+</li>
+<li>
+<em>object</em> <code>venue</code>: (<strong>optional</strong>) The event venue information.
+<ul>
+<li><em>string</em> <code>id</code>: The event venue id.</li>
+<li><em>string</em> <code>country</code>: (<strong>optional</strong>) The event venue country.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) The event venue city.</li>
+<li><em>number</em> <code>latitude</code>: The event venue latitude.</li>
+<li><em>number</em> <code>longitude</code>: The event venue longitude.</li>
+<li><em>string</em> <code>street</code>: (<strong>optional</strong>) The event venue street.</li>
+<li><em>string</em> <code>zip</code>: (<strong>optional</strong>) The event venue zip.</li>
+</ul>
+</li>
+<li><em>string[]</em> <code>imgs</code>: (<strong>optional</strong>) The event photos links.</li>
+<li><em>number</em> <code>updated_time</code>: (<strong>optional</strong>) The event last update time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>created_time</code>: (<strong>optional</strong>) The time the post was initially published in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>hot_count</code>: (<strong>optional</strong>) Number of hot in the event.</li>
+<li><em>number</em> <code>interested_count</code>: (<strong>optional</strong>) Number of people interested in the event.</li>
+<li><em>number</em> <code>maybe_count</code>: (<strong>optional</strong>) Number of people who maybe going to the event.</li>
+<li><em>number</em> <code>noreply_count</code>: (<strong>optional</strong>) Number of people who did not reply to the event.</li>
+<li><em>number</em> <code>attending_count</code>: (<strong>optional</strong>) Number of people attending the event.</li>
+<li><em>number</em> <code>num_mood</code>: (<strong>optional</strong>) Total number of mood.</li>
+<li><em>number</em> <code>num_likes</code>: (<strong>optional</strong>) Total number of people who liked.</li>
+<li><em>number</em> <code>num_angry</code>: (<strong>optional</strong>) Total number of people who angry.</li>
+<li><em>number</em> <code>num_ha</code>: (<strong>optional</strong>) Total number of people who ha.</li>
+<li><em>number</em> <code>num_wow</code>: (<strong>optional</strong>) Total number of people who wow.</li>
+<li><em>number</em> <code>num_love</code>: (<strong>optional</strong>) Total number of people who love.</li>
+<li><em>number</em> <code>num_sad</code>: (<strong>optional</strong>) Total number of people who sad.</li>
+<li><em>number</em> <code>num_comments</code>: (<strong>optional</strong>) Total number of comments.</li>
+<li><em>number</em> <code>num_shares</code>: (<strong>optional</strong>) Total number of people who shares.</li>
+<li><em>number</em> <code>distance</code>: (<strong>optional</strong>) Distance between target point and activity position. (meters)</li>
+</ul>
+</li>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>{
+  &quot;count&quot;: 2,
+  &quot;queryTime&quot;: 0.013,
+  &quot;events&quot;: [
+      {
+        &quot;id&quot;: &quot;FBEvent_2012178632332403&quot;,
+        &quot;freetext_type&quot;: &quot;FB Event Post&quot;,
+        &quot;name&quot;: &quot;人工智慧技術的應用&quot;,
+        &quot;location&quot;: &quot;NCTU 交大創業與創新學程 / 創業育成中心&quot;,
+        &quot;start_time&quot;: 1520301600000,
+        &quot;end_time&quot;: 1520308800000,
+        &quot;description&quot;: &quot;主題：【AI人工智慧技術應用】\n\n主講人：吳毅成教授(交大資訊工程系教授)\n\n時間：107/03/06 Tue 10:00-12:00\n\n地點：交大光復校區管理一館光寶二廳\n\n報名網址：https://pis.ee/5AKJX\n\n歡迎畢業校友、非交大生參加&quot;,
+        &quot;updated_time&quot;: 1520471480846,
+        &quot;category_list&quot;: [
+          &quot;&quot;
+        ],
+        &quot;owner&quot;: {
+          &quot;id&quot;: &quot;501364163226187&quot;,
+          &quot;name&quot;: &quot;NCTU 交大創業與創新學程 / 創業育成中心&quot;
+        },
+        &quot;venue&quot;: {
+          &quot;id&quot;: &quot;501364163226187&quot;,
+          &quot;country&quot;: &quot;Taiwan&quot;,
+          &quot;city&quot;: &quot;新竹&quot;,
+          &quot;latitude&quot;: 24.787099807854,
+          &quot;longitude&quot;: 120.99526405334,
+          &quot;street&quot;: &quot;新竹市大學路1001號&quot;,
+          &quot;zip&quot;: &quot;30010&quot;
+        },
+        &quot;imgs&quot;: [
+          &quot;https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/18402115_2006693206026601_3199362888900575852_o.jpg?_nc_cat=0&amp;oh=7e58424c19ddc572d1bd88f63df40396&amp;oe=5B667CEF&quot;
+        ],
+        &quot;hot_count&quot;: 58,
+        &quot;interested_count&quot;: 51,
+        &quot;maybe_count&quot;: 51,
+        &quot;noreply_count&quot;: 29,
+        &quot;attending_count&quot;: 7,
+        &quot;distance&quot;: 539
+      },
+      {
+        &quot;id&quot;: &quot;FB_558699390837369_2715943778446242&quot;,
+        &quot;freeTextType&quot;: &quot;FB Post&quot;,
+        &quot;description&quot;: &quot;【活動轉知】#2019桃園婦女節 #Women一起愛自己\n 一年一度的婦女節又來囉~~~\n 今年，依舊有好玩有趣的活動與民眾分享 🎡園遊會資訊🎡⋯⋯\n 活動時間：108/03/09（六）11:00~14:00\n 活動地點：陽明運動公園（桃園市桃園區長沙路）\n 當天，有吃有玩還有抽獎🥳\n 我們 #桃園市婦女發展中心 也會去擺攤\n 記得來找我們玩遊戲拿小禮哦🥰 ----------------------------------------------------------------\n 💄名人講座💄\n 講座時間：108/03/16（六）09:30~12:00\n 講座地點：中壢藝術館二樓演藝廳\n 邀請到 #柳燕老師 及 #林書煒女士\n 分享保養技巧及工作歷程 歡迎大家空下時間來參與活動呦✌️ \n&quot;,
+        &quot;start_time&quot;: 1552089600000,
+        &quot;location&quot;: &quot;陽明運動公園&quot;,
+        &quot;name&quot;: &quot;桃園婦女節&quot;,
+        &quot;gps&quot;: {
+          &quot;lat&quot;: 24.98084099977,
+          &quot;lon&quot;: 121.30879014665
+        },
+        &quot;owner&quot;: {
+          &quot;name&quot;: &quot;桃園市桃園地政事務所&quot;,
+          &quot;id&quot;: &quot;558699390837369&quot;
+        },
+        &quot;venue&quot;: {
+          &quot;latitude&quot;: 24.98084099977,
+          &quot;longitude&quot;: 121.30879014665
+        },
+        &quot;updated_time&quot;: 1551920020815,
+        &quot;created_time&quot;: 1551145599000,
+        &quot;hot_count&quot;: 3,
+        &quot;num_likes&quot;: 0,
+        &quot;num_comments&quot;: 0,
+        &quot;num_shares&quot;: 3,
+        &quot;num_mood&quot;: 0,
+        &quot;num_angry&quot;: 0,
+        &quot;num_ha&quot;: 0,
+        &quot;num_wow&quot;: 0,
+        &quot;num_love&quot;: 0,
+        &quot;num_sad&quot;: 0
+      }
+      ...
+  ]
+}
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2><a id="get_search_activity_histogram"></a> Get activity histogram</h2>
+<p>Get activity histogram.</p>
+<pre><code>GET /activity/histogram?
+    group={groupField}&amp;
+    type={eventType}&amp;
+    query={query}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    category={category}&amp;
+    sort={sortKey}&amp;
+    asc={ascending}&amp;
+    num={numberOfAggregations}&amp;
+    timeKey={timeField}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>group</code>: (<strong>required</strong>) Specified group field.  Available expressions are <strong>category</strong>,  <strong>city</strong>.</li>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>string</em> <code>type</code>: (<strong>optional</strong>) Search specific event types in comma separated format such as <code>type=Web Post,FB Post</code>. You can specify <strong>FB Post</strong>, <strong>Web Post</strong>, <strong>FB Event Post</strong>.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) To display data of the specified categories in comma separated format such as <code>category=音樂,運動</code>.</li>
+<li><em>string</em> <code>sort</code>: (<strong>optional</strong>) To sort with the specified key. You can specify <strong>value</strong>, <strong>key</strong>. Default is <strong>value</strong>.</li>
+<li><em>boolean</em> <code>asc</code>: (<strong>optional</strong>) To sort with ascending order. Default is <strong>false</strong>.</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Maximum number of aggregations object to return. Default is <strong>100</strong>.</li>
+<li><em>string</em> <code>timeKey</code>: (**optional<strong>) The date field to filter on. Must be one of: <code>start_time</code>, <code>end_time</code>, <code>created_time</code>, <code>updated_time</code>. Default is `start_time</strong>.</li>
+</ul>
+<h4>Response</h4>
+<ul>
+<li>
+<p><strong>200 OK</strong>: Activity histogram statistics. Parameters are:</p>
+<ul>
+<li><em>string</em> <code>key</code>: The axis display string.</li>
+<li>
+<p><em>number</em> <code>value</code>: Quantity that matches the key.</p>
+</li>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>[
+    {
+        &quot;key&quot;: &quot;適合兒童參與&quot;,
+        &quot;value&quot;: 42145
+    },
+    {
+        &quot;key&quot;: &quot;藝術&quot;,
+        &quot;value&quot;: 34999
+    },
+    {
+        &quot;key&quot;: &quot;人際交流&quot;,
+        &quot;value&quot;: 16267
+    },
+    {
+        &quot;key&quot;: &quot;手工藝&quot;,
+        &quot;value&quot;: 15414
+    },
+    {
+        &quot;key&quot;: &quot;美食&quot;,
+        &quot;value&quot;: 10978
+    },
+    ...
+]
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2><a id="get_search_activity_date_histogram"></a> Get activity date histogram</h2>
+<p>Get activity data aggregated by time intervals.</p>
+<pre><code>GET /activity/date-histogram?
+    interval={timeInterval}&amp;
+    group={dateField}&amp;
+    timezone={timezone}&amp;
+    query={query}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    timeKey={timeField}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    category={category}&amp;
+    type={eventType}&amp;
+    num={numberOfBuckets}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>interval</code>: (<strong>required</strong>) Time interval for aggregation. Must be one of: <code>1m</code>, <code>5m</code>, <code>15m</code>, <code>30m</code>, <code>1h</code>, <code>2h</code>, <code>4h</code>, <code>12h</code>, <code>1d</code>, <code>1w</code>, <code>1M</code>.</li>
+<li><em>string</em> <code>group</code>: (<strong>required</strong>) The date field to aggregate on. Must be one of: <code>start_time</code>, <code>end_time</code>, <code>created_time</code>, <code>updated_time</code>.</li>
+<li><em>string</em> <code>timezone</code>: (<strong>optional</strong>) Timezone for the aggregation. Default is <code>Asia/Taipei</code>.</li>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>timeKey</code>: (<strong>optional</strong>) The date field to filter on. Must be one of: <code>start_time</code>, <code>end_time</code>, <code>created_time</code>, <code>updated_time</code>. Default is same as <code>group</code>.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) To display data of the specified categories in comma separated format such as <code>category=音樂,運動</code>.</li>
+<li><em>string</em> <code>type</code>: (<strong>optional</strong>) Search specific event types in comma separated format such as <code>type=Web Post,FB Post</code>. You can specify <strong>FB Post</strong>, <strong>Web Post</strong>, <strong>FB Event Post</strong>.</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Maximum number of buckets to return. Default is <strong>100</strong>.</li>
+</ul>
+<h4>Response</h4>
+<ul>
+<li>
+<p><strong>200 OK</strong>: Activity date histogram statistics. Parameters are:</p>
+<ul>
+<li><em>number</em> <code>key</code>: The timestamp in milliseconds.</li>
+<li><em>string</em> <code>key_as_string</code>: The timestamp in ISO 8601 format.</li>
+<li>
+<p><em>number</em> <code>value</code>: Number of events in the time bucket.</p>
+</li>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>[
+    {
+        &quot;key&quot;: 1747152000000,
+        &quot;key_as_string&quot;: &quot;2025-05-13T16:00:00.000Z&quot;,
+        &quot;value&quot;: 10
+    },
+    {
+        &quot;key&quot;: 1747238400000,
+        &quot;key_as_string&quot;: &quot;2025-05-14T16:00:00.000Z&quot;,
+        &quot;value&quot;: 10
+    }
+]
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h4>Notes</h4>
+<ul>
+<li>
+The <code>interval</code> parameter supports the following values:
+<ul>
+<li>Minutes: <code>1m</code>, <code>5m</code>, <code>15m</code>, <code>30m</code></li>
+<li>Hours: <code>1h</code>, <code>2h</code>, <code>4h</code>, <code>12h</code></li>
+<li>Days: <code>1d</code></li>
+<li>Weeks: <code>1w</code></li>
+<li>Months: <code>1M</code></li>
+</ul>
+</li>
+<li>
+The <code>group</code> parameter allows you to aggregate data based on different date fields:
+<ul>
+<li><code>start_time</code>: Aggregate by event start time</li>
+<li><code>end_time</code>: Aggregate by event end time</li>
+<li><code>created_time</code>: Aggregate by event creation time (default)</li>
+<li><code>updated_time</code>: Aggregate by event last update time</li>
+</ul>
+</li>
+<li>The <code>timezone</code> parameter should be a valid IANA timezone name (e.g., <code>Asia/Taipei</code>, <code>UTC</code>, etc.)</li>
+<li>The response includes both millisecond timestamps and ISO 8601 formatted date strings</li>
+<li>The <code>value</code> field represents the number of events in each time bucket</li>
+</ul>
+<h1><a id="FB_Event_Post">FB Event Post APIs</a></h1>
+<h2><a id="get_search_event_post"></a> Search <a id="event">FB Event Post</a></h2>
+<p>Search FB Event Post.</p>
+<pre><code>GET /event?
+    query={query}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    category={category}&amp;
+    gps={gps}&amp;
+    radius={radius}&amp;
+    num={numberOfPage}&amp;
+    p={page}&amp;
+    sort={sort}&amp;
+    asc={asceding}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) To display data of the specified categories in comma separated format such as <code>category=音樂,運動</code>.</li>
+<li><em>string</em> <code>gps</code>: (<strong>optional</strong>) Target point gps. This filter returns all results within a circle of the given radius around the target point.</li>
+<li><em>number</em> <code>radius</code>: (<strong>present when gps parameter exists</strong>) The radius of the search. (meters)</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Number of events to list in each page. Default is <strong>200</strong>.</li>
+<li><em>number</em> <code>p</code>: (<strong>optional</strong>) Page number. <strong>0</strong> to list all events. Positive number to list event by page. Default is <strong>1</strong>.</li>
+<li><em>string</em> <code>sort</code>: (<strong>optional</strong>) To sort with the specified key. You can specify <strong>_score</strong>, <strong>start_time</strong>, <strong>end_time</strong>, <strong>updated_time</strong>, <strong>distance</strong>, <strong>interested_count</strong>. Default is <strong>start_time</strong>.</li>
+<li><em>boolean</em> <code>asc</code>: (<strong>optional</strong>) To sort with ascending order. Default is <strong>true</strong>.</li>
+</ul>
+<h4>Response</h4>
+<ul>
+<li>
+<p><strong>200 OK</strong>: FB Event Post data. Parameters are:</p>
+<ul>
+<li><em>number</em> <code>count</code>: Total number of results matching our search criteria.</li>
+<li><em>number</em> <code>queryTime</code>: Time in seconds for Elasticsearch to execute the search.</li>
+<li>
+<p><em>list</em> <code>events</code>: FB Event Posts.</p>
+<ul>
+<li><em>string</em> <code>id</code>: The event ID.</li>
+<li><em>string</em> <code>name</code>: The event name.</li>
+<li><em>string</em> <code>description</code>: (<strong>optional</strong>) The event description.</li>
+<li><em>string</em> <code>location</code>: (<strong>optional</strong>) The event location.</li>
+<li><em>number</em> <code>start_time</code>: The event start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>end_time</code>: (<strong>optional</strong>) The event end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) The event category.</li>
+<li>
+<em>object</em> <code>owner</code>: (<strong>optional</strong>) The event owner information.
+<ul>
+<li><em>string</em> <code>id</code>: The event owner id.</li>
+<li><em>string</em> <code>name</code>: The event owner name.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) The event owner category.</li>
+</ul>
+</li>
+<li>
+<em>object</em> <code>venue</code>: (<strong>optional</strong>) The event venue information.
+<ul>
+<li><em>string</em> <code>id</code>: The event venue id.</li>
+<li><em>string</em> <code>country</code>: (<strong>optional</strong>) The event venue country.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) The event venue city.</li>
+<li><em>number</em> <code>latitude</code>: The event venue latitude.</li>
+<li><em>number</em> <code>longitude</code>: The event venue longitude.</li>
+<li><em>string</em> <code>street</code>: (<strong>optional</strong>) The event venue street.</li>
+<li><em>string</em> <code>zip</code>: (<strong>optional</strong>) The event venue zip.</li>
+</ul>
+</li>
+<li><em>string[]</em> <code>imgs</code>: (<strong>optional</strong>) The event photos links.</li>
+<li><em>number</em> <code>interested_count</code>: (<strong>optional</strong>) Number of people interested in the event.</li>
+<li><em>number</em> <code>maybe_count</code>: (<strong>optional</strong>) Number of people who maybe going to the event.</li>
+<li><em>number</em> <code>noreply_count</code>: (<strong>optional</strong>) Number of people who did not reply to the event.</li>
+<li><em>number</em> <code>attending_count</code>: (<strong>optional</strong>) Number of people attending the event.</li>
+<li><em>number</em> <code>distance</code>: (<strong>optional</strong>) Distance between target point and activity position. (meters)</li>
+</ul>
+</li>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>{
+  &quot;count&quot;: 483305,
+  &quot;queryTime&quot;: 0.033,
+  &quot;events&quot;: [
+      {
+        &quot;id&quot;: &quot;FBEvent_2012178632332403&quot;,
+        &quot;name&quot;: &quot;人工智慧技術的應用&quot;,
+        &quot;location&quot;: &quot;NCTU 交大創業與創新學程 / 創業育成中心&quot;,
+        &quot;start_time&quot;: 1520301600000,
+        &quot;end_time&quot;: 1520308800000,
+        &quot;description&quot;: &quot;主題：【AI人工智慧技術應用】\n\n主講人：吳毅成教授(交大資訊工程系教授)\n\n時間：107/03/06 Tue 10:00-12:00\n\n地點：交大光復校區管理一館光寶二廳\n\n報名網址：https://pis.ee/5AKJX\n\n歡迎畢業校友、非交大生參加&quot;,
+        &quot;owner&quot;: {
+          &quot;id&quot;: &quot;501364163226187&quot;,
+          &quot;name&quot;: &quot;NCTU 交大創業與創新學程 / 創業育成中心&quot;
+        },
+        &quot;venue&quot;: {
+          &quot;id&quot;: &quot;501364163226187&quot;,
+          &quot;country&quot;: &quot;Taiwan&quot;,
+          &quot;city&quot;: &quot;新竹&quot;,
+          &quot;latitude&quot;: 24.787099807854,
+          &quot;longitude&quot;: 120.99526405334,
+          &quot;street&quot;: &quot;新竹市大學路1001號&quot;,
+          &quot;zip&quot;: &quot;30010&quot;
+        },
+        &quot;imgs&quot;: [
+          &quot;https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/18402115_2006693206026601_3199362888900575852_o.jpg?_nc_cat=0&amp;oh=7e58424c19ddc572d1bd88f63df40396&amp;oe=5B667CEF&quot;
+        ],
+        &quot;interested_count&quot;: 51,
+        &quot;maybe_count&quot;: 51,
+        &quot;noreply_count&quot;: 29,
+        &quot;attending_count&quot;: 7,
+        &quot;distance&quot;: 539
+      },
+      ...
+  ]
+}
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2><a id="get_search_event_post_histogram"></a> Get <a id="event">FB Event Post</a> histogram</h2>
+<p>Get FB Event Post histogram.</p>
+<pre><code>GET /event/histogram?
+    group={groupField}&amp;
+    query={query}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    category={category}&amp;
+    sort={sortKey}&amp;
+    asc={ascending}&amp;
+    num={numberOfAggregations}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>group</code>: (<strong>required</strong>) Specified group field.  Available expressions are <strong>category</strong>,  <strong>city</strong>.</li>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>category</code>: (<strong>optional</strong>) To display data of the specified categories in comma separated format such as <code>category=音樂,運動</code>.</li>
+<li><em>string</em> <code>sort</code>: (<strong>optional</strong>) To sort with the specified key. You can specify <strong>value</strong>, <strong>key</strong>. Default is <strong>value</strong>.</li>
+<li><em>boolean</em> <code>asc</code>: (<strong>optional</strong>) To sort with ascending order. Default is <strong>false</strong>.</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Maximum number of aggregations object to return. Default is <strong>20</strong>.</li>
+</ul>
+<h4>Response</h4>
+<ul>
+<li>
+<p><strong>200 OK</strong>: FB Event Post histogram statistics. Parameters are:</p>
+<ul>
+<li><em>string</em> <code>key</code>: The axis display string.</li>
+<li>
+<p><em>number</em> <code>value</code>: Quantity that matches the key.</p>
+</li>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>[
+    {
+        &quot;key&quot;: &quot;適合兒童參與&quot;,
+        &quot;value&quot;: 42145
+    },
+    {
+        &quot;key&quot;: &quot;藝術&quot;,
+        &quot;value&quot;: 34999
+    },
+    {
+        &quot;key&quot;: &quot;人際交流&quot;,
+        &quot;value&quot;: 16267
+    },
+    {
+        &quot;key&quot;: &quot;手工藝&quot;,
+        &quot;value&quot;: 15414
+    },
+    {
+        &quot;key&quot;: &quot;美食&quot;,
+        &quot;value&quot;: 10978
+    },
+    ...
+]
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+<h1><a id="Extracted_Event_from_FB_Post">Extracted Event from FB Post APIs</a></h1>
+<h2><a id="get_search_extracted_event"></a> Search <a id="extracted_event">Extracted Event from FB Post</a></h2>
+<p>Search extracted event from FB post.</p>
+<pre><code>GET /extractedevent?
+    query={query}&amp;
+    from={beginTime}&amp;
+    to={endTime}&amp;
+    id={id}&amp;
+    city={city}&amp;
+    gps={gps}&amp;
+    radius={radius}&amp;
+    num={numberOfPage}&amp;
+    p={page}&amp;
+    sort={sort}&amp;
+    asc={asceding}
+</code></pre>
+
+<ul>
+<li><em>string</em> <code>query</code>: (<strong>optional</strong>) Search keyword.</li>
+<li><em>number</em> <code>from</code>: (<strong>optional</strong>) The start time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>number</em> <code>to</code>: (<strong>optional</strong>) The end time in milliseconds from 1970 Jan 1st UTC.</li>
+<li><em>string</em> <code>id</code>: (<strong>optional</strong>) Specified event id.</li>
+<li><em>string</em> <code>city</code>: (<strong>optional</strong>) To display data of the specified cities in comma separated format such as <code>city=臺北,宜蘭</code>.</li>
+<li><em>string</em> <code>gps</code>: (<strong>optional</strong>) Target point gps. This filter returns all results within a circle of the given radius around the target point.</li>
+<li><em>number</em> <code>radius</code>: (<strong>present when gps parameter exists</strong>) The radius of the search. (meters)</li>
+<li><em>number</em> <code>num</code>: (<strong>optional</strong>) Number of events to list in each page. Default is <strong>200</strong>.</li>
+<li><em>number</em> <code>p</code>: (<strong>optional</strong>) Page number. <strong>0</strong> to list all events. Positive number to list event by page. Default is <strong>1</strong>.</li>
+<li><em>string</em> <code>sort</code>: (<strong>optional</strong>) To sort with the specified key. You can specify <strong>_score</strong>, <strong>start_time</strong>, <strong>distance</strong>, <strong>num_mood</strong>, <strong>num_likes</strong>, <strong>num_angry</strong>, <strong>num_ha</strong>, <strong>num_wow</strong>, <strong>num_love</strong>, <strong>num_sad</strong>, <strong>num_comments</strong>, <strong>num_shares</strong>. Default is <strong>start_time</strong>.</li>
+<li>
+<p><em>boolean</em> <code>asc</code>: (<strong>optional</strong>) To sort with ascending order. Default is <strong>true</strong>.</p>
+<ul>
+<li>
+<p><strong>Example</strong></p>
+<pre><code>{
+  &quot;count&quot;: 1,
+  &quot;queryTime&quot;: 0.001,
+  &quot;events&quot;: [
+    {
+      &quot;id&quot;: &quot;FB_558699390837369_2715943778446242&quot;,
+      &quot;freeTextType&quot;: &quot;FB Post&quot;,
+      &quot;description&quot;: &quot;【活動轉知】#2019桃園婦女節 #Women一起愛自己\n 一年一度的婦女節又來囉~~~\n 今年，依舊有好玩有趣的活動與民眾分享 🎡園遊會資訊🎡⋯⋯\n 活動時間：108/03/09（六）11:00~14:00\n 活動地點：陽明運動公園（桃園市桃園區長沙路）\n 當天，有吃有玩還有抽獎🥳\n 我們 #桃園市婦女發展中心 也會去擺攤\n 記得來找我們玩遊戲拿小禮哦🥰 ----------------------------------------------------------------\n 💄名人講座💄\n 講座時間：108/03/16（六）09:30~12:00\n 講座地點：中壢藝術館二樓演藝廳\n 邀請到 #柳燕老師 及 #林書煒女士\n 分享保養技巧及工作歷程 歡迎大家空下時間來參與活動呦✌️ \n&quot;,
+      &quot;start_time&quot;: 1552089600000,
+      &quot;location&quot;: &quot;陽明運動公園&quot;,
+      &quot;name&quot;: &quot;桃園婦女節&quot;,
+      &quot;gps&quot;: {
+        &quot;lat&quot;: 24.98084099977,
+        &quot;lon&quot;: 121.30879014665
+      },
+      &quot;owner&quot;: {
+        &quot;author&quot;: &quot;taoyuanland&quot;,
+        &quot;author_name&quot;: &quot;桃園市桃園地政事務所&quot;,
+        &quot;id&quot;: &quot;558699390837369&quot;
+      },
+      &quot;venue&quot;: {
+        &quot;latitude&quot;: 24.98084099977,
+        &quot;longitude&quot;: 121.30879014665
+      },
+      &quot;recordUpdateTime&quot;: 1551920020815,
+      &quot;created_time&quot;: 1551145599000,
+      &quot;num_likes&quot;: 0,
+      &quot;num_comments&quot;: 0,
+      &quot;num_shares&quot;: 3,
+      &quot;num_mood&quot;: 0,
+      &quot;num_angry&quot;: 0,
+      &quot;num_ha&quot;: 0,
+      &quot;num_wow&quot;: 0,
+      &quot;num_love&quot;: 0,
+      &quot;num_sad&quot;: 0
+    }
+  ]
+}
+</code></pre>
+
+</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
